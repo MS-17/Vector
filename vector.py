@@ -172,38 +172,3 @@ def vproj(vec1, vec2, copy=True):
     ratio = dot_product(vec1, vec2) / dot_product(vec2, vec2)
     vec_scal_prod(result, ratio, copy=False)
     return result
-
-
-# Usage
-
-a, b = [1, 2], [4, 3]
-
-print("Sum:", vsum(a, b), "\ta:", a)
-print("Difference:", vdiff(a, b), "\ta:", a)
-print("Vec * 5:", vec_scal_prod(a, 5), "\ta:", a)
-print("Vec / 5:", vec_scal_div(a, 5), "\ta:", a)
-print("Magnitude:", mgn(a))
-print("Dot product:", dot_product(a, b))
-print("Cosine:", cosine(a, b))
-print("Angle between vectors (rad):", angle_rad(a, b))
-print("Angle between vectors (grad):", angle_grad(a, b))
-print("Reversed vector:", reversed_vec(a), "\ta:", a)
-print("Collinear?:", collinear(a, b))
-print("Parallel?:", parallel(a, b))
-print("Equal?:", equal(a, b))
-print("Opposite?: ", opposite(a, b))
-print("Orthogonal?:", ort(a, b))
-print("Normalize vector:", norm(a), "\ta:", a)
-print("Scalar projection:", proj(a, b))
-print("Vector projection:", vproj(a, b), "\ta:", a)
-print("Check if the vectors are almost equal with an eps precision = 1E-10:", vec_are_almost_eq(a, b))
-print("Initial vectors after all those operations:", "\ta:", a, "\tb:", b)
-
-print("Let ex1 = 6 and ex2 = 6.000000000000001")
-ex1 = 6
-ex2 = 6.000000000000001
-print("Does ex1 equal to ex2 with eps precision = 1E-10?", scalars_are_almost_eq(ex1, ex2))
-
-
-
-
