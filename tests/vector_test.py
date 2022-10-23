@@ -1,5 +1,5 @@
-import vector
-from vector import scalars_are_almost_eq, vec_are_almost_eq
+from src import vector
+from src.vector import scalars_are_almost_eq, vec_are_almost_eq
 
 
 def test_vsum():

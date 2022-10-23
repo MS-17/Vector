@@ -1,5 +1,4 @@
-import vector as vc
-
+from src import vector as vc
 
 a, b = [1, 2], [4, 3]
 
