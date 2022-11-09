@@ -1,4 +1,4 @@
-from src import vector as vc
+from src.module_vector import vector as vc
 
 a, b = [1, 2], [4, 3]
 
@@ -11,13 +11,13 @@ print("Dot product:", vc.dot_product(a, b))
 print("Cosine:", vc.cosine(a, b))
 print("Angle between vectors (rad):", vc.angle_rad(a, b))
 print("Angle between vectors (grad):", vc.angle_grad(a, b))
-print("Reversed vector:", vc.reversed_vec(a), "\ta:", a)
+print("Reversed module_vector:", vc.reversed_vec(a), "\ta:", a)
 print("Collinear?:", vc.collinear(a, b))
 print("Parallel?:", vc.parallel(a, b))
 print("Equal?:", vc.equal(a, b))
 print("Opposite?: ", vc.opposite(a, b))
 print("Orthogonal?:", vc.ort(a, b))
-print("Normalize vector:", vc.norm(a), "\ta:", a)
+print("Normalize module_vector:", vc.norm(a), "\ta:", a)
 print("Scalar projection:", vc.proj(a, b))
 print("Vector projection:", vc.vproj(a, b), "\ta:", a)
 print("Check if the vectors are almost equal with an eps precision = 1E-10:", vc.vec_are_almost_eq(a, b))

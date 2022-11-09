@@ -1,10 +1,16 @@
 import math as mth
 
 
+def len_is_equal(a, b):
+    """ Проверяет равны ли длины a и b """
+    return len(a) == len(b)
+
+
 def len_is_zero(vec1):
     """ Проверяет равна ли длина вектора 0 """
-    if len(vec1) == 0:
+    if len_is_equal(vec1, []):
         raise ValueError("The vector length should not be equal to 0")
+    return False
 
 
 def check_len(vec1, vec2):
@@ -14,13 +20,13 @@ def check_len(vec1, vec2):
     """
     len_is_zero(vec1)
     len_is_zero(vec2)
-    if len(vec1) != len(vec2):
+    if not len_is_equal(vec1, vec2):
         raise ValueError("The lengths of the vectors are not equal!")
 
 
-def do_copy(vec1, copy=True):
-    """ copy=True -> сделать копию vec1, иначе -> вернуть vec1 """
-    if copy:
+def vector_cpy(vec1, mkcpy=True):
+    """ mkcpy=True -> сделать копию vec1, иначе -> вернуть vec1 """
+    if mkcpy:
         result = vec1[:]
     else:
         result = vec1
@@ -39,38 +45,38 @@ def vec_are_almost_eq(vec1, vec2, eps=1E-10):
     return False not in eq
 
 
-def vsum(vec1, vec2, copy=True):
+def vsum(vec1, vec2, mkcpy=True):
     """ Сумма векторов """
     check_len(vec1, vec2)
-    result = do_copy(vec1, copy)
+    result = vector_cpy(vec1, mkcpy)
     for i in range(len(result)):
         result[i] += vec2[i]
     return result
 
 
-def vdiff(vec1, vec2, copy=True):
+def vdiff(vec1, vec2, mkcpy=True):
     """ Разность векторов """
     check_len(vec1, vec2)
-    result = do_copy(vec1, copy)
+    result = vector_cpy(vec1, mkcpy)
     for i in range(len(result)):
         result[i] -= vec2[i]
     return result
 
 
-def vec_scal_prod(vec1, scalar, copy=True):
+def vec_scal_prod(vec1, scalar, mkcpy=True):
     """ Умножение вектора на число """
-    result = do_copy(vec1, copy)
+    result = vector_cpy(vec1, mkcpy)
     for i in range(len(result)):
         result[i] *= scalar
     return result
 
 
-def vec_scal_div(vec1, scalar, copy=True):
+def vec_scal_div(vec1, scalar, mkcpy=True):
     """ Деление вектора на число """
     len_is_zero(vec1)
     if scalar == 0:
         raise ValueError("The scalar shouldn't be equal to 0!")
-    return vec_scal_prod(vec1, 1 / scalar, copy)
+    return vec_scal_prod(vec1, 1 / scalar, mkcpy)
 
 
 def mgn(vec1):
@@ -109,10 +115,10 @@ def angle_grad(vec1, vec2):
     return ((mth.acos(cosine(vec1, vec2))) * 180) / mth.pi
 
 
-def reversed_vec(vec1, copy=True):
+def reversed_vec(vec1, mkcpy=True):
     """ Вектор обратный данному """
     len_is_zero(vec1)
-    return vec_scal_prod(vec1, -1, copy)
+    return vec_scal_prod(vec1, -1, mkcpy)
 
 
 def collinear(vec1, vec2):
@@ -150,10 +156,10 @@ def ort(vec1, vec2):
     return res
 
 
-def norm(vec1, copy=True):
-    """ norm = normalize, find the unit vector. Нормировка вектора """
+def norm(vec1, mkcpy=True):
+    """ norm = normalize, find the unit module_vector. Нормировка вектора """
     len_is_zero(vec1)
-    result = do_copy(vec1, copy)
+    result = vector_cpy(vec1, mkcpy)
     for i in range(len(result)):
         result[i] /= mgn(vec1)
     return result
@@ -165,10 +171,10 @@ def proj(vec1, vec2):
     return mgn(vec1) * cosine(vec1, vec2)
 
 
-def vproj(vec1, vec2, copy=True):
+def vproj(vec1, vec2, mkcpy=True):
     """ Векторная проекция vec1 на vec2 """
     check_len(vec1, vec2)
-    result = do_copy(vec2, copy)
+    result = vector_cpy(vec2, mkcpy)
     ratio = dot_product(vec1, vec2) / dot_product(vec2, vec2)
-    vec_scal_prod(result, ratio, copy=False)
+    vec_scal_prod(result, ratio, mkcpy=False)
     return result
