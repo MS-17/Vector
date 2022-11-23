@@ -2,9 +2,10 @@ from src.module_vector import vector as vc
 from src.module_vector.vector import len_is_equal
 
 
+# if do_copy = True, copies the passed matrix, else returns the matrix itself
 def mtr_cpy(mtr1, do_copy=True):
+    """Если do_copy = True, возвращает копию переданной матрицы, иначе возвращает ту же матрицу"""
     if do_copy:
-        # res = copy.deepcopy(mtr1)
         res = []
         for i in mtr1:
             res += [i * 1]
@@ -15,171 +16,114 @@ def mtr_cpy(mtr1, do_copy=True):
 
 # every element is a list (or list like)
 def is_fully_nested(mtr1):
-    """ True, если все элементы вложенные, представляют список """
+    """ True, если все элементы вложенные, т е представляют список """
     return all(isinstance(i, list) for i in mtr1)
 
 
 # all elements are not lists (or lists like)
 def is_not_nested(mtr1):
-    """ True, если нет ни одного вложенного элемента """
+    """ True, если нет ни одного вложенного элемента - списка """
     return all(not (isinstance(i, list)) for i in mtr1)
 
 
-# False if fully nested or not nested at all. Uses is_not_nested() and is_fully_nested()
+# False if the list is fully nested or not nested at all. Uses is_not_nested() and is_fully_nested()
 def incorrectly_nested(mtr1):
     """
-        True, если список выглядит следующим образом: [3, [1], 2]. False, если все строки матрицы -
-        векторы (списки) или ни один из элементов не является вектором (списком)
+        True, если список выглядит следующим образом: [3, [1], 2] или ни один элемент не является list.
+        False, если все строки матрицы - векторы (списки)
     """
-    return not is_not_nested(mtr1) and not is_fully_nested(mtr1)
-
-
-# check if matrix len is 0. Uses len_is_equal() and if_fully_nested()
-def null_check(mtr1):
-    if len_is_equal(mtr1, []):
-        raise ValueError("Matrix should be more than 1 * 1 dimension")
-    if is_fully_nested(mtr1):
-        for i in mtr1:
-            if len_is_equal(i, []):
-                raise ValueError("There should be no empty elements in the matrix")
+    return not (is_not_nested(mtr1) or is_fully_nested(mtr1)) or is_not_nested(mtr1)
 
 
 # check if matrix looks like that: [[2], 1]. Uses incorrectly_nested()
 def check_if_incorrectly_nested(mtr1):
     if incorrectly_nested(mtr1):
         raise ValueError("The matrix cannot look like the following [[2], 1]. Each element should be nested or "
-                         "none of them should be nested at all")
+                         "none of them should be nested at all.\nIf you want a vector row pass it like the following: "
+                         "[[1, 2, 3]]")
 
 
-# check if the length of each row is equal. Uses is_fully_nested() and len_is_equal()
+# check if the matrix len is 0. Uses len_is_equal() from src.module_vector.vector
+def null_check(mtr1):
+    """ Проверяет есть ли хоть один пустая строка в матрице """
+    if len_is_equal(mtr1, []):
+        raise ValueError("Matrix should be more than 1 * 1 dimension")
+
+    for i in mtr1:
+        if len_is_equal(i, []):
+            raise ValueError("There should be no empty elements in the matrix")
+
+
+# check if the length of each row is equal. Uses len_is_equal()
 def rows_are_equal(mtr1):
-    if is_fully_nested(mtr1):
-        for i in mtr1:
-            if not len_is_equal(i, mtr1[0]):
-                raise ValueError("Length of each row should equal in the matrix")
+    for i in mtr1:
+        if not len_is_equal(i, mtr1[0]):
+            raise ValueError("Length of each row should equal in the matrix")
 
 
-# Uses null_check(), check_if_incorrectly_nested(), rows_are_equal()
+# Uses null_check(), check_if_incorrectly_nested(), rows_are_equal() from src.module_vector.vector
 def check_matrix(mtr1):
-    null_check(mtr1)
+    """ Проверяет корректность введенной матрицы"""
     check_if_incorrectly_nested(mtr1)
+    null_check(mtr1)
     rows_are_equal(mtr1)
 
 
-# def incorrect_row_vector(mtr1):
-#     """ Вернет ValueError, если вектор строка выглядит следующим образом: [[1, 2]] """
-#     if is_fully_nested(mtr1) and len_is_equal(mtr1, [1]) and not len_is_equal(mtr1[0], [1]):
-#         raise ValueError("The row vector shouldn't look that way: [[2, 3]]. "
-#                          "If you want to use a single row, pass it like the following: [2, 3]")
-
-
-# True is row vector. Uses check_matrix() and is_not_nested(), len_is_equal(), is_fully_nested()
-
-def incorrect_row_vector(mtr1):
-    """ Вернет ValueError, если вектор строка выглядит следующим образом: [1, 2], или [[1]]"""
-    if is_not_nested(mtr1) or len_is_equal(mtr1[0], [1]):
-        raise ValueError("The row vector shouldn't look that way: [1, 2]. "
-                         "If you want to use a single row, pass it like the following: [[2, 3]]")
-
-
-# def row_vector(mtr1):
-#     """
-#         True, если вектор (список) вида [1, 2, 3], а также для списка вида [[1, 2]], но False для [[1]].
-#         Для иных случаев - False. Для вектора строки вида [[1, 2]] вернет ValueError
-#     """
-#     check_matrix(mtr1)
-#     incorrect_row_vector(mtr1)
-#     return is_not_nested(mtr1) or (is_fully_nested(mtr1) and len_is_equal(mtr1, [1]) and not len_is_equal(mtr1[0], [1]))
-
-
-def row_vector(mtr1):
-    """
-        True, если вектор (список) вида [[1, 2, 3]]. Для иных случаев - False. Для вектора строки вида [[1, 2]] вернет ValueError
-    """
-    incorrect_row_vector(mtr1)
-    return True
-
-
-def column_vector(mtr1):
-    """ True, если вектор (список) вида [[1], [2], [3]]. False иначе, в том числе для вектора (списка) вида [1] """
-    check_matrix(mtr1)
-    return is_fully_nested(mtr1) and all(
-        len(i) == 1 for i in mtr1)  # or (is_not_nested(mtr1) and len_is_equal(mtr1, [1]))
-
-
-# this check is used for addition and subtraction
+# check if you can add(subtract) 2 matrices
 def check_dimension(mtr1, mtr2):
-    check_matrix(mtr1)
-    check_matrix(mtr2)
-
-    incorrect_row_vector(mtr1)
-    incorrect_row_vector(mtr2)
-
+    """ Проверяет на возможность сложения(вычитания) 2 матриц """
     if not len_is_equal(mtr1, mtr2):
         raise ValueError("The rows number should equal")
 
-    if (row_vector(mtr1) and column_vector(mtr2)) or (row_vector(mtr2) and column_vector(mtr1)):
-        raise ValueError("Cannot add (subtract) vector row and vector column")
-
-    if is_fully_nested(mtr1) and is_fully_nested(mtr2):
-        for i, j in zip(mtr1, mtr2):
-            if not len_is_equal(i, j):
-                raise ValueError("The rows length should equal")
+    for i, j in zip(mtr1, mtr2):
+        if not len_is_equal(i, j):
+            raise ValueError("The rows length should equal")
 
 
+# check if you can multiply 2 matrices
 def check_mtr_mltp(mtr1, mtr2):
-    if (row_vector(mtr1) and row_vector(mtr2)) or (row_vector(mtr1) and not len_is_equal(mtr1, mtr2) and
-                                                   is_fully_nested(mtr2)) or \
-            (is_fully_nested(mtr1) and not len_is_equal(mtr1[0], mtr2)):
-        raise ValueError("The matrix1 columns number should equal the matrix2 rows number")
+    """ Проверяет на возможность умножения 2 матриц """
+    if not len_is_equal(mtr1[0], mtr2):
+        raise ValueError("There should equal number of columns in the first matrix and rows in the second one")
 
 
-'''
+# check if 2 matrices are almost equal, uses vec_are_almost_equal() from src.module_vector.vector
+def mtr_are_almost_equal(mtr1, mtr2):
+    """Проверяет 2 матрицы на равенство с учетом возможной ошибки числа с плавающей точкой"""
+    return all(vc.vec_are_almost_eq(i, j) for i, j in zip(mtr1, mtr2))
+
+
+# sum matrices
 def matrix_sum(mtr1, mtr2, do_copy=True):
+    """Сумма матриц"""
+    check_matrix(mtr1)
+    check_matrix(mtr2)
     check_dimension(mtr1, mtr2)
-    res = mtr_cpy(mtr1, do_copy)
-    for i in range(len(res)):
-        res[i] = [j + k for j, k in zip(res[i], mtr2[i])]
-    return res
 
-
-def matrix_diff(mtr1, mtr2, do_copy=True):
-    check_dimension(mtr1, mtr2)
-    res = mtr_cpy(mtr1, do_copy)
-    for i in range(len(res)):
-        res[i] = [j - k for j, k in zip(res[i], mtr2[i])]
-    return res
-
-
-def scalar_mlt(mtr1, scalar, do_copy=True):
-    null_check(mtr1)
-    res = mtr_cpy(mtr1, do_copy)
-    for i in range(len(res)):
-        # res[i] = 
-    return res
-
-'''
-
-
-# use vectors
-def matrix_sum(mtr1, mtr2, do_copy=True):
-    check_dimension(mtr1, mtr2)
     res = mtr_cpy(mtr1, do_copy)
     for i in range(len(res)):
         vc.vsum(res[i], mtr2[i], mkcpy=False)
     return res
 
 
+# subtract matrices
 def matrix_diff(mtr1, mtr2, do_copy=True):
+    """Разность матриц"""
+    check_matrix(mtr1)
+    check_matrix(mtr2)
     check_dimension(mtr1, mtr2)
+
     res = mtr_cpy(mtr1, do_copy)
     for i in range(len(res)):
         vc.vdiff(res[i], mtr2[i], mkcpy=False)
     return res
 
 
+# transpose matrix
 def matrixT(mtr1, do_copy=True):
+    """Транспонирование матрицы"""
     check_matrix(mtr1)
+
     res = []
     rows = len(mtr1)
     cols = len(mtr1[0])
@@ -198,13 +142,41 @@ def matrixT(mtr1, do_copy=True):
     return mtr1
 
 
+# multiply a matrix by a scalar
+def matrix_scalar_mlt(mtr1, scalar, do_copy=True):
+    """Умножение матрицы на скаляр"""
+    check_matrix(mtr1)
+
+    res = mtr_cpy(mtr1, do_copy)
+
+    return [vc.vec_scal_prod(i, scalar, mkcpy=False) for i in res]
+
+
+# divide a matrix by a scalar
+def matrix_scalar_div(mtr1, scalar, do_copy=True):
+    """Деление матрицы на скаляр"""
+    check_matrix(mtr1)
+
+    res = mtr_cpy(mtr1, do_copy)
+
+    return [vc.vec_scal_div(i, scalar, mkcpy=False) for i in res]
+
+
+# the matrix multiplication
 def matrix_mltp(mtr1, mtr2, do_copy=True):
-    check_mtr_mltp(mtr1, mtr2)  # there's no need to use check_matrix() here because matrices are both
-    # already checked in check_mtr()
+    """Умножение матриц"""
+    check_matrix(mtr1)
+    check_matrix(mtr2)
+    check_mtr_mltp(mtr1, mtr2)
 
     res = []
+    temp = matrixT(mtr2)
 
-    # for i in mtr1
+    for i in mtr1:
+        row = []
+        for j in temp:
+            row += [vc.dot_product(i, j)]
+        res += [row]
 
     if do_copy:
         return res
@@ -214,21 +186,70 @@ def matrix_mltp(mtr1, mtr2, do_copy=True):
     return mtr1
 
 
-# a = [1, 2, 2]
-# b = [2, 2, 9]
-# print("Initial matrices:\t", "a:", a, "\t", "b:", b, end="\n\n")
-# print("Sum:", matrix_sum(a, b), "\ta:", a)
-# print("Diff:", matrix_diff(a, b), "\ta:", a)
-# print("Transpose:", matrixT(a), "\ta:", a)
+# get a specified row by index
+def getRow(mtr1, index):
+    """Получение строки по индексу"""
+    check_matrix(mtr1)
+    return mtr1[index]
 
-print(row_vector([[1], [2]]))
 
-# print(check_mtr_mltp([3, 2], [[1], [2]]))
-# print("Checkers:")
-# print(check_matrix([[1], [2]]))
-# print(row_vector([[1, 2], [1, 2]]))
-# print(column_vector([[1, 2], [1, 2]]))
-# print(check_dimension([[1]], [[1]]))
-# print(incorrectly_nested([1, 2, 3]))
-# print(is_not_nested([[1], [2]]))
-# print(is_fully_nested([1, 2]))
+# get a specified column by index
+def getCol(mtr1, index):
+    """Получение столбца по индексу"""
+    check_matrix(mtr1)
+    return matrixT(mtr1)[index]
+
+
+# swap 2 rows
+def swapRows(mtr1, idx1, idx2, do_copy=True):
+    """Меняет 2 строки местами"""
+    if idx1 == idx2:
+        raise ValueError("Cannot swap a row with itself")
+
+    check_matrix(mtr1)
+
+    res = mtr_cpy(mtr1, do_copy)
+
+    res[idx1], res[idx2] = res[idx2], res[idx1]
+
+    return res
+
+
+# multiply a specified row(index required) by a scalar
+def row_times_scl(mtr1, index, scalar, do_copy=True):
+    """Умножение строки по индексу на скаляр"""
+    check_matrix(mtr1)
+    res = mtr_cpy(mtr1, do_copy)
+    res[index] = vc.vec_scal_prod(getRow(res, index), scalar, mkcpy=False)
+    return res
+
+
+# divide a specified row(index required) by a scalar
+def row_div_scl(mtr1, index, scalar, do_copy=True):
+    """Деление строки по индексу на скаляр"""
+    return row_times_scl(mtr1, index, 1 / scalar, do_copy)
+
+
+# sum(subtract) 2 rows in matrix. Each row can be multiplied by a scalar
+# pass 1 / scalar if you want to divide a row by this scalar
+# inx_scalar should be a list of [idx1, idx2, scalar1, scalar2]
+# idx1 is the index of the first row, idx2 is the index of the second row, scalar1 is a number, which the first row
+# will be multiplied by, scalar2 is a number, which the second row will be multiplied by.
+# The result of the operation will be written in the row with idx1
+def sum_rows(mtr1, *inx_scalar, do_copy=True):
+    """
+        Сложение(вычитание) строк в матрице. Каждая строка может быть домножена на число. Чтобы разделить строку на
+        число можно передать в качестве 1 / scalar.
+        Аргумент inx_scalar должен быть списком и содержать следующее элементы: индекс 1 строки, индекс 2 строки,
+        число, на которое необходимо умножить 1 строку, число, на которое необходимо умножить 2 строку.
+        Результат сложения (вычитания) будет записан в строку по индексу, который был передан 1-ым арументом в inx_scalar
+    """
+    check_matrix(mtr1)
+    res = mtr_cpy(mtr1, do_copy)
+
+    row1 = vc.vec_scal_prod(getRow(mtr1, inx_scalar[0]), inx_scalar[2])
+    row2 = vc.vec_scal_prod(getRow(mtr1, inx_scalar[1]), inx_scalar[3])
+    res[inx_scalar[0]] = vc.vsum(row1, row2, mkcpy=False)
+
+    return res
+
