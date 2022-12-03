@@ -188,14 +188,15 @@ def matrix_mltp(mtr1, mtr2, do_copy=True):
 
 # get a specified row by index
 def getRow(mtr1, index):
-    """Получение строки по индексу"""
+    """Получение копии строки по индексу"""
     check_matrix(mtr1)
-    return mtr1[index]
+    res = vc.vector_cpy(mtr1[index])
+    return res
 
 
 # get a specified column by index
 def getCol(mtr1, index):
-    """Получение столбца по индексу"""
+    """Получение копии столбца по индексу"""
     check_matrix(mtr1)
     return matrixT(mtr1)[index]
 
@@ -230,26 +231,28 @@ def row_div_scl(mtr1, index, scalar, do_copy=True):
     return row_times_scl(mtr1, index, 1 / scalar, do_copy)
 
 
-# sum(subtract) 2 rows in matrix. Each row can be multiplied by a scalar
+# sum(subtract) 2 rows in a matrix. Each row can be multiplied by a scalar
 # pass 1 / scalar if you want to divide a row by this scalar
-# inx_scalar should be a list of [idx1, idx2, scalar1, scalar2]
-# idx1 is the index of the first row, idx2 is the index of the second row, scalar1 is a number, which the first row
+# index1 is the index of the first row, index2 is the index of the second row, scalar1 is a number, which the first row
 # will be multiplied by, scalar2 is a number, which the second row will be multiplied by.
-# The result of the operation will be written in the row with idx1
-def sum_rows(mtr1, *inx_scalar, do_copy=True):
+# The result of the operation will be written in the row with index1. To subtract, multiply the subtrahend by -1
+def sum_rows(mtr1, index1, index2, scalar1, scalar2, do_copy=True):
     """
         Сложение(вычитание) строк в матрице. Каждая строка может быть домножена на число. Чтобы разделить строку на
-        число можно передать в качестве 1 / scalar.
-        Аргумент inx_scalar должен быть списком и содержать следующее элементы: индекс 1 строки, индекс 2 строки,
-        число, на которое необходимо умножить 1 строку, число, на которое необходимо умножить 2 строку.
-        Результат сложения (вычитания) будет записан в строку по индексу, который был передан 1-ым арументом в inx_scalar
+        число можно передать scalar в качестве 1 / scalar.
+        index1 - индекс 1 строки, index2 - индекс 2 строки,
+        scalar1 - число, на которое необходимо умножить 1 строку,
+        scalar2 - число, на которое необходимо умножить 2 строку.
+        Результат сложения (вычитания) будет записан в строку по индексу, который был передан по index1.
+        Для вычитания использовать умножение вычитаемой строки на -1.
     """
     check_matrix(mtr1)
     res = mtr_cpy(mtr1, do_copy)
 
-    row1 = vc.vec_scal_prod(getRow(mtr1, inx_scalar[0]), inx_scalar[2])
-    row2 = vc.vec_scal_prod(getRow(mtr1, inx_scalar[1]), inx_scalar[3])
-    res[inx_scalar[0]] = vc.vsum(row1, row2, mkcpy=False)
+    row1 = vc.vec_scal_prod(getRow(mtr1, index1), scalar1)
+    row2 = vc.vec_scal_prod(getRow(mtr1, index2), scalar2)
+    res[index1] = vc.vsum(row1, row2, mkcpy=False)
 
     return res
+
 

@@ -2,7 +2,7 @@ import math as mth
 
 
 def len_is_equal(a, b):
-    """ Проверяет равны ли длины a и b """
+    """ Проверяет равны ли длины a и b, просто возвращает len(a) == len(b) """
     return len(a) == len(b)
 
 

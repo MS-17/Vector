@@ -1,4 +1,4 @@
-import matrix as mtr
+import src.module_matrix.matrix as mtr
 import src.module_vector.vector as vc
 
 
