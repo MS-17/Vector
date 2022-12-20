@@ -13,23 +13,23 @@ def test_merge_mtr():
 
 def test_move_forward_3d():
     a = [[1, 2, 4, 0], [3, 0, 1, 2], [5, 2, 4, 8]]
-    lns.move_forward(a)
+    res = lns.move_forward(a, True)
     exp = [[1, 2, 4, 0], [0, 1, 1.8333333333333333, -0.33333333333333], [0, 0, 1, -4.000000000000000000]]
-    assert mtr_are_almost_equal(a, exp)
+    assert mtr_are_almost_equal(res, exp)
 
 
 def test_move_backward_3d():
     a = [[1, 2, 3, 1], [0, 1, 2, 2], [0, 0, 1, 2]]
-    lns.move_backward(a)
+    res = lns.move_backward(a, True)
     exp = [[1, 0, 0, -1], [0, 1, 0, -2], [0, 0, 1, 2]]
-    assert mtr_are_almost_equal(a, exp)
+    assert mtr_are_almost_equal(res, exp)
 
 
 def test_gauss_3d():
     a = [[2, 3, 1, 0], [5, 3, 2, 2], [1, 1, 1, 2]]
-    lns.gauss(a)
+    res = lns.gauss(a, True)
     exp = [[1, 0, 0, -0.4], [0, 1, 0, -0.8], [0, 0, 1, 3.2]]
-    assert mtr_are_almost_equal(a, exp)
+    assert mtr_are_almost_equal(res, exp)
 
 
 def test_get_solution_3d():
@@ -42,23 +42,23 @@ def test_get_solution_3d():
 
 def test_move_forward_2d():
     a = [[1, 2, 4], [3, -1, 1]]
-    lns.move_forward(a)
+    res = lns.move_forward(a, True)
     exp = [[1, 2, 4], [0, 1, 1.571428571428571428]]
-    assert mtr_are_almost_equal(a, exp)
+    assert mtr_are_almost_equal(res, exp)
 
 
 def test_move_backward_2d():
     a = [[1, -1.5, 3], [0, 1, -2]]
-    lns.move_backward(a)
+    res = lns.move_backward(a, True)
     exp = [[1, 0, 0], [0, 1, -2]]
-    assert mtr_are_almost_equal(a, exp)
+    assert mtr_are_almost_equal(res, exp)
 
 
 def test_gauss_2d():
     a = [[-4, 3, 0.2], [1, 0.4, -1.5]]
-    lns.gauss(a)
+    res = lns.gauss(a, True)
     exp = [[1, 0, -0.9956521739130434], [0, 1, -1.2608695652173913]]
-    assert mtr_are_almost_equal(a, exp)
+    assert mtr_are_almost_equal(res, exp)
 
 
 def test_get_solution_2d():

@@ -2,7 +2,7 @@ from src.module_vector import vector as vc
 from src.module_matrix import matrix as mtr
 
 
-# Matrices merging. Always makes copy of mtr1 and never changes mtr2
+# Matrices merging. Always makes copy of the mtr1 and never changes the mtr2
 def merge_mtr(mtr1, mtr2):
     """ Слияние двух матриц, всегда делает копию 1-ой матрицы, 2 матрица не изменяется """
     mtr.check_matrix(mtr1)
@@ -19,13 +19,18 @@ def merge_mtr(mtr1, mtr2):
     return res
 
 
-# Returns matrix that has all 1s on the main diagonal and all 0s under it. Always changes mtr1 inside.
+# Returns matrix that has all 1s on the main diagonal and all 0s under it. Changes mtr1 by default, however, if
+# do_copy=True, changes and returns a matrix copy.
 # If logs argument is True, the intermediate results of operations will be printed
-def move_forward(mtr1, logs=False):
+def move_forward(mtr1, do_copy=False, logs=False):
     """
         На выходе матрица, у которой на главной диагонали все 1, а под главной диагональю - все 0.
-        Изменяет mtr1. Если logs=True, то выводит промежуточные результаты преобразований данной матрицы
+        По умолчанию изменяет mtr1, но если do_copy=True, создает копию изначальной матрицы
+        Если logs=True, то выводит промежуточные результаты преобразований данной матрицы
     """
+
+    mtr1 = mtr.mtr_cpy(mtr1, do_copy)
+
     mtr_len = len(mtr1)
 
     for i in range(mtr_len):
@@ -45,16 +50,22 @@ def move_forward(mtr1, logs=False):
         if logs:
             print(mtr1)
 
+    return mtr1
+
 
 # mtr1 should be the result of the move_forward operation
-# Returns the identity matrix. Always changes mtr1 inside. If logs argument is True
-# the intermediate results of operations will be printed
-def move_backward(mtr1, logs=False):
+# Returns the identity matrix. Changes mtr1 by default, however, if do_copy=True, changes and returns a matrix copy.
+# If logs argument is True the intermediate results of operations will be printed
+def move_backward(mtr1, do_copy=False, logs=False):
     """
         На вход матрица, у которой на главной диагонали все 1,под главной диагональю - все 0.
-        На выходе получается единичная матрица. Изменяет mtr1. Если logs=True, то
-        выводит промежуточные результаты преобразований данной матрицы
+        На выходе получается единичная матрица. По умолчанию изменяет mtr1, но если do_copy=True,
+        создает копию изначальной матрицы. Если logs=True, то выводит промежуточные результаты
+        преобразований данной матрицы
      """
+
+    mtr1 = mtr.mtr_cpy(mtr1, do_copy)
+
     mtr_len = len(mtr1)
 
     for i in range(mtr_len - 1, 0, -1):
@@ -64,16 +75,22 @@ def move_backward(mtr1, logs=False):
         if logs:
             print(mtr1)
 
+    return mtr1
 
-# Performs the Gauss-Jordan matrix elimination. mtr1 argument should be a merged matrix. Always changes mtr1
-# if logs == True, the intermediate results of operations will be printed
+
+# Performs the Gauss-Jordan matrix elimination. The mtr1 argument should be a merged matrix.
+# Changes mtr1 by default, however, if do_copy=True, changes and returns a matrix copy.
+# If logs == True, the intermediate results of operations will be printed
 # This function uses move_forward() and move_backward()
-def gauss(mtr1, logs=False):
+def gauss(mtr1, do_copy=False, logs=False):
     """
         Реализация алгоритма Гаусса. На вход необходимо передать уже расширенную матрицу.
-        Данная функция изменяет переданную матрицу. Если logs=True, то
-        выводит промежуточные результаты преобразований данной матрицы
+        По умолчанию изменяет mtr1, но если do_copy=True, создает копию изначальной матрицы.
+        Если logs=True, то выводит промежуточные результаты преобразований данной матрицы
     """
+
+    mtr1 = mtr.mtr_cpy(mtr1, do_copy)
+
     # move forward
     move_forward(mtr1, logs)
 
@@ -83,8 +100,8 @@ def gauss(mtr1, logs=False):
     return mtr1
 
 
-# Returns a list (vector) containing the linear system solutions. Never changes mtr1 and mtr2
-# if logs == True, the intermediate results of operations will be printed
+# Returns a list (vector) containing the linear system solutions. Never changes mtr1 and mtr2.
+# If logs == True, the intermediate results of operations will be printed.
 # This function uses gauss()
 def get_solution(mtr1, mtr2, logs=False):
     """
