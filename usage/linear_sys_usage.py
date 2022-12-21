@@ -1,8 +1,8 @@
 import src.module_equations.linear_system as lns
 
 
-print("\n!!!It's not recommended to use move_forward(), move_backward() and gauss() functions because they "
-      "change the arguments passed!!!\n")
+print("\n!!!The functions move_forward(), move_backward() and gauss() change first parameter by default. "
+      "However, they allow to make argument copies by using do_copy=True parameter!!!\n")
 print("2D linear systems usage:")
 a = [[-0.1, -1], [5, 2]]
 b = [[3.5], [-2]]
@@ -11,15 +11,13 @@ print("a:", a, "\tb:", b)
 merge = lns.merge_mtr(a, b)
 print("a and b merged:", merge)
 
-lns.move_forward(merge, False)
-print("Move_forward:", merge)
+mv_frd = lns.move_forward(merge, True)
+print("Move_forward, do_copy=True:", mv_frd, "\tmerge matrix:", merge, "\tmv_frd:", mv_frd)
 
-lns.move_backward(merge)
-print("Move_backward:",  merge)
+print("Move_backward:",  lns.move_backward(mv_frd), "\tmv_frd matrix:", mv_frd)
 
-merge = lns.merge_mtr(a, b)
-lns.gauss(merge)
-print("Gauss method:",  merge)
+merge1 = lns.merge_mtr(a, b)
+print("Gauss method:",  lns.gauss(merge1),  "\tmerge1 matrix:", merge1)
 
 solution = lns.get_solution(a, b)
 print("Get_solution:",  solution)
@@ -33,17 +31,15 @@ print("c:", c, "\td:", d)
 merge = lns.merge_mtr(c, d)
 print("c and d merged:", merge)
 
-lns.move_forward(merge, False)
-print("Move_forward:", merge)
+print("Move_forward:", lns.move_forward(merge), "\tmerge matrix:", merge)
 
-lns.move_backward(merge)
-print("Move_backward:",  merge)
+print("Move_backward:",  lns.move_backward(merge), "\tmerge matrix:", merge)
 
-merge = lns.merge_mtr(c, d)
-lns.gauss(merge)
-print("Gauss method:",  merge)
+merge2 = lns.merge_mtr(c, d)
+gs = lns.gauss(merge2, True)
+print("Gauss method, do_copy=True:", gs,  "\tmerge2 matrix:", merge2)
 
-solution = lns.get_solution(c, d)
+solution = lns.get_solution(a, b)
 print("Get_solution:",  solution)
 
 
