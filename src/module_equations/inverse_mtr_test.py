@@ -1,6 +1,5 @@
 import src.module_equations.inverse_mtr as inm
-from src.module_matrix.matrix import mtr_are_almost_equal
-from src.module_vector.vector import vec_are_almost_eq
+from src.module_matrix.matrix import mtr_are_almost_equal, matrix_mltp
 
 
 def test_get_identity():
@@ -32,3 +31,11 @@ def test_inverse_matrix_method():
     res = inm.inverse_matrix_method(a, b)
     exp = [[0.825], [-3.775], [2.575]]
     assert mtr_are_almost_equal(res, exp)
+
+
+def test_inverse_matrix_method1():
+    a = [[1, 2, 3], [4, 3, 3], [2, -1, 1]]
+    b = [[1], [-0.3], [8]]
+    res = inm.inverse_matrix_method(a, b)
+    exp = matrix_mltp(a, res)
+    assert mtr_are_almost_equal(b, exp)

@@ -50,9 +50,3 @@ def inverse_matrix_method(mtr1, mtr2):
     inverse_mtr1 = inverse(mtr1)
     res = matrix_mltp(inverse_mtr1, mtr2)
     return res
-
-
-a = [[1, 2, 3], [4, 3, 3], [2, -1, 1]]
-b = [[1], [-0.3], [8]]
-print(inverse_matrix_method(a, b))
-
